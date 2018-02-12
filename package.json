@@ -1,6 +1,6 @@
 {
   "name": "fastify-oracle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A plugin for Fastify to provide Oracle DB connections",
   "main": "plugin.js",
   "scripts": {
