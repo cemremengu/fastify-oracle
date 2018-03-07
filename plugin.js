@@ -38,6 +38,6 @@ function fastifyOracleDB (fastify, options, next) {
 }
 
 module.exports = fp(fastifyOracleDB, {
-  fastify: '>=1.0.0-rc.1',
+  fastify: '^1.1.0',
   name: 'fastify-oracle'
 })
