@@ -4,6 +4,8 @@ const fp = require('fastify-plugin')
 const oracledb = require('oracledb')
 
 function fastifyOracleDB (fastify, options, next) {
+  fastify.decorate("oracledb", oracledb);
+  
   const close = function (fastify, done) {
     fastify.oracle.close(done)
   }
