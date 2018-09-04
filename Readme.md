@@ -56,3 +56,7 @@ over the `pool` and `poolAlias` options.
 ## License
 
 [MIT License](http://jsumners.mit-license.org/)
+
+## Acknowledgements
+
+Thanks to [Vincit](https://github.com/Vincit/travis-oracledb-xe) for his Travis Oracle work.

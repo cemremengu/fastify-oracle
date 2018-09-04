@@ -7,8 +7,8 @@ const plugin = require('../plugin')
 test('accepts singleton client', (t) => {
   t.plan(4)
   oracledb.createPool({
-    user: 'SYSTEM',
-    password: 'oracle',
+    user: 'travis',
+    password: 'travis',
     connectString: 'localhost/XE'
   }, (err, pool) => {
     if (err) t.threw(err)
@@ -34,8 +34,8 @@ test('accepts singleton client', (t) => {
 test('retrieves a cached pool', (t) => {
   t.plan(4)
   oracledb.createPool({
-    user: 'SYSTEM',
-    password: 'oracle',
+    user: 'travis',
+    password: 'travis',
     connectString: 'localhost/XE',
     poolAlias: 'foo'
   }, (err, pool) => {
