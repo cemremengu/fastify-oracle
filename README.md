@@ -54,6 +54,58 @@ takes precedence over the `pool` option.
 + `client`: an instance of an `oracledb` connection pool. This takes precedence
 over the `pool` and `poolAlias` options.
 
+A `name` option can be used in order to connect to multiple oracledb instances. 
+The first registered instance can be accessed via `fastify.oracle` or `fastify.oracle.<dbname>`. Note that once you register a *named* instance, you will *not* be able to register an unnamed instance.
+
+```js
+const fastify = require('fastify')()
+
+fastify
+  .register(require('fastify-oracle'), {
+    pool: {
+      user: 'foo',
+      password: 'bar',
+      connectString: 'oracle.example.com:1521/ora1'
+    },
+    name: 'ora1'
+  })
+  .register(require('fastify-oracle'), {
+    pool: {
+      user: 'foo',
+      password: 'bar',
+      connectString: 'oracle.example.com:1521/ora2'
+    },
+    name: 'ora2'
+  })
+
+fastify.get('/db_1_data', async function (req, reply) {
+  const conn = await this.oracle.ora1.getConnection()
+  const results = await conn.execute('select 1 as foo from dual')
+  await conn.close()
+  return results
+})
+
+fastify.get('/db_2_data', async function (req, reply) {
+  const conn = await this.oracle.ora2.getConnection()
+  const results = await conn.execute('select 1 as foo from dual')
+  await conn.close()
+  return results
+})
+```
+
+The `oracledb` instance is also available via `fastify.oracle.db` for accessing constants and other functionality:
+
+```js
+fastify.get('/db_data', async function (req, reply) {
+  const conn = await this.oracle.getConnection()
+  const results = await conn.execute('select 1 as foo from dual', { }, { outFormat: this.oracle.db.OBJECT })
+  await conn.close()
+  return results
+})
+```
+
+If needed `pool` instance can be accessed via `fastify.oracle[.dbname].pool`
+
 ## License
 
 [MIT License](http://jsumners.mit-license.org/)
