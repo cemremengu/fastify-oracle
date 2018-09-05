@@ -1,7 +1,7 @@
 # fastify-oracle
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Build Status](https://travis-ci.org/cemremengu/fastify-oracle.svg?branch=master)](https://travis-ci.org/cemremengu/fastify-oracle)
-[![Coverage Status](https://coveralls.io/repos/github/cemremengu/fastify-oracle/badge.svg?branch=master)](https://coveralls.io/github/cemremengu/fastify-oracle?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/cemremengu/fastify-oracle.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/cemremengu/fastify-oracle.svg)](https://greenkeeper.io/)
+
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)[![Build Status](https://travis-ci.org/cemremengu/fastify-oracle.svg?branch=master)](https://travis-ci.org/cemremengu/fastify-oracle)
 
 This module provides access to an Oracle database connection pool via the
 [oracledb](https://npm.im/oracledb) module. It decorates the [Fastify](https://fastify.io)
@@ -114,5 +114,5 @@ If needed `pool` instance can be accessed via `fastify.oracle[.dbname].pool`
 ## Acknowledgements
 
 Thanks to 
-- [James Sumners](https://github.com/jsumners) for his work and transferring his repository to me.
+- [James Sumners](https://github.com/jsumners), who is the original author of this plugin, for his work and transferring his repository to me.
 - [Vincit](https://github.com/Vincit/travis-oracledb-xe) for his Travis Oracle work.

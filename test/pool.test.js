@@ -23,7 +23,7 @@ test('creates usable pool from config', (t) => {
     password: 'travis',
     connectString: 'localhost/xe'
   }
-  plugin(fastify, {pool: opts}, (err) => {
+  plugin(fastify, { pool: opts }, (err) => {
     if (err) t.threw(err)
     t.ok(fastify.oracle)
     fastify.oracle.getConnection()

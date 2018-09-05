@@ -24,7 +24,7 @@ test('accepts singleton client', (t) => {
       }
     }
 
-    plugin(fastify, {client: pool}, (err) => {
+    plugin(fastify, { client: pool }, (err) => {
       if (err) t.threw(err)
       pool.close()
     })
@@ -52,7 +52,7 @@ test('retrieves a cached pool', (t) => {
       }
     }
 
-    plugin(fastify, {poolAlias: 'foo'}, (err) => {
+    plugin(fastify, { poolAlias: 'foo' }, (err) => {
       if (err) t.threw(err)
       pool.close()
     })
