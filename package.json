@@ -7,7 +7,8 @@
     "test": "tap 'test/**/*.test.js'",
     "test-ci": "tap --cov 'test/**/*.test.js'",
     "lint": "standard | snazzy",
-    "lint-ci": "standard"
+    "lint-ci": "standard",
+    "coveralls": "npm run test-ci --  --cov"
   },
   "precommit": [
     "lint",
@@ -28,6 +29,7 @@
   },
   "homepage": "https://github.com/jsumners/fastify-oracle#readme",
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "fastify": "^1.1.0",
     "pre-commit": "^1.2.2",
     "snazzy": "^7.1.1",
