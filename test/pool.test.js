@@ -14,7 +14,7 @@ test('creates usable pool from config', (t) => {
 
     addHook (name, fn) {
       t.is(name, 'onClose')
-      t.match(fn, /fastify\.oracle\.close/)
+      t.match(fn, /fastify\.oracle\.pool\.close/)
     }
   }
 
