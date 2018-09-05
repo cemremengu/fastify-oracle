@@ -8,8 +8,10 @@ node_js:
   - "6"
   
 script:
-  - npm run lint-ci
+  - npm run lint
   - npm run coveralls -- -c
+
+after_script: "npm run nyc report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js"
 
 env:
   - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe ORACLE_SID=XE OCI_LIB_DIR=/u01/app/oracle/product/11.2.0/xe/lib LD_LIBRARY_PATH=/u01/app/oracle/product/11.2.0/xe/lib
