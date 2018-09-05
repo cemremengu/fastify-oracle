@@ -5,10 +5,8 @@
   "main": "plugin.js",
   "scripts": {
     "test": "tap 'test/**/*.test.js'",
-    "test-ci": "tap --cov 'test/**/*.test.js'",
     "lint": "standard | snazzy",
-    "lint-ci": "standard",
-    "coveralls": "npm run test-ci --  --cov"
+    "cov": "npm run test --  --cov"
   },
   "precommit": [
     "lint",
@@ -16,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jsumners/fastify-oracle.git"
+    "url": "git+ssh://git@github.com/cemremengu/fastify-oracle.git"
   },
   "keywords": [
     "fastify",
@@ -25,9 +23,9 @@
   "author": "James Sumners <james.sumners@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jsumners/fastify-oracle/issues"
+    "url": "https://github.com/cemremengu/fastify-oracle/issues"
   },
-  "homepage": "https://github.com/jsumners/fastify-oracle#readme",
+  "homepage": "https://github.com/cemremengu/fastify-oracle#readme",
   "devDependencies": {
     "coveralls": "^3.0.2",
     "fastify": "^1.1.0",
