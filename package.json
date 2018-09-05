@@ -6,7 +6,7 @@
   "scripts": {
     "test": "tap 'test/**/*.test.js'",
     "lint": "standard | snazzy",
-    "cov": "npm run test --  --cov"
+    "coveralls": "npm run test --  --cov"
   },
   "precommit": [
     "lint",

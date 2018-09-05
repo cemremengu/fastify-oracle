@@ -9,9 +9,9 @@ node_js:
   
 script:
   - npm run lint
-  - npm run cov -- -c
+  - npm run coveralls -- -c
 
-after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+after_script: "npm run nyc report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js"
 
 env:
   - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe ORACLE_SID=XE OCI_LIB_DIR=/u01/app/oracle/product/11.2.0/xe/lib LD_LIBRARY_PATH=/u01/app/oracle/product/11.2.0/xe/lib
