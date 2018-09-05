@@ -15,12 +15,12 @@ test('accepts singleton client', (t) => {
     const fastify = {
       decorate (name, obj) {
         t.is(name, 'oracle')
-        t.is(obj, pool)
+        t.is(obj.pool, pool)
       },
 
       addHook (name, fn) {
         t.is(name, 'onClose')
-        t.match(fn, /fastify\.oracle\.close/)
+        t.match(fn, /fastify\.oracle\.pool\.close/)
       }
     }
 
@@ -43,12 +43,12 @@ test('retrieves a cached pool', (t) => {
     const fastify = {
       decorate (name, obj) {
         t.is(name, 'oracle')
-        t.is(obj, pool)
+        t.is(obj.pool, pool)
       },
 
       addHook (name, fn) {
         t.is(name, 'onClose')
-        t.match(fn, /fastify\.oracle\.close/)
+        t.match(fn, /fastify\.oracle\.pool\.close/)
       }
     }
 
