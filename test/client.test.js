@@ -5,7 +5,7 @@ const oracledb = require('oracledb')
 const plugin = require('../plugin')
 
 test('accepts singleton client', (t) => {
-  t.plan(4)
+  t.plan(5)
   oracledb.createPool({
     user: 'travis',
     password: 'travis',
@@ -15,6 +15,7 @@ test('accepts singleton client', (t) => {
     const fastify = {
       decorate (name, obj) {
         t.is(name, 'oracle')
+        t.is(obj.db, oracledb)
         t.is(obj.pool, pool)
       },
 
@@ -32,7 +33,7 @@ test('accepts singleton client', (t) => {
 })
 
 test('retrieves a cached pool', (t) => {
-  t.plan(4)
+  t.plan(5)
   oracledb.createPool({
     user: 'travis',
     password: 'travis',
@@ -43,6 +44,7 @@ test('retrieves a cached pool', (t) => {
     const fastify = {
       decorate (name, obj) {
         t.is(name, 'oracle')
+        t.is(obj.db, oracledb)
         t.is(obj.pool, pool)
       },
 
