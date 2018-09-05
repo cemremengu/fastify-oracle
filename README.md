@@ -1,5 +1,5 @@
 # fastify-oracle
-[![Build Status](https://travis-ci.org/jsumners/fastify-oracle.svg?branch=master)](https://travis-ci.org/jsumners/fastify-oracle)
+[![Build Status](https://travis-ci.org/cemremengu/fastify-oracle.svg?branch=master)](https://travis-ci.org/cemremengu/fastify-oracle)
 
 This module provides access to an Oracle database connection pool via the
 [oracledb](https://npm.im/oracledb) module. It decorates the [Fastify](https://fastify.io)
