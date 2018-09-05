@@ -56,3 +56,7 @@ over the `pool` and `poolAlias` options.
 ## License
 
 [MIT License](http://jsumners.mit-license.org/)
+
+## Acknowledgements
+
+Thanks to [James Sumners](https://github.com/jsumners) for his work and transferring his repository to me.
