@@ -16,11 +16,11 @@ const close = function (fastify, done) {
   }
 }
 
-function decorateFastifyInstance(pool, fastify, options, next) {
+function decorateFastifyInstance (pool, fastify, options, next) {
   const oracle = {
     getConnection: pool.getConnection.bind(pool),
     pool
-  };
+  }
 
   if (options.name) {
     if (!fastify.oracle) {
@@ -35,8 +35,7 @@ function decorateFastifyInstance(pool, fastify, options, next) {
   } else {
     if (fastify.oracle) {
       return next(new Error('fastify-oracle has already been registered'))
-    }
-    else {
+    } else {
       fastify.decorate('oracle', Object.assign(oracle, { db: oracledb }))
     }
   }
@@ -46,7 +45,7 @@ function decorateFastifyInstance(pool, fastify, options, next) {
   return next()
 }
 
-function fastifyOracleDB(fastify, options, next) {
+function fastifyOracleDB (fastify, options, next) {
   if (options.client) {
     if (oracledb.Pool.prototype.isPrototypeOf(options.client) === false) {
       return next(Error('supplied client must be an instance of oracledb.pool'))
