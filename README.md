@@ -1,4 +1,5 @@
 # fastify-oracle
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Build Status](https://travis-ci.org/cemremengu/fastify-oracle.svg?branch=master)](https://travis-ci.org/cemremengu/fastify-oracle)
 
 This module provides access to an Oracle database connection pool via the
