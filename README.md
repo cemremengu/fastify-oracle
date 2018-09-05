@@ -59,4 +59,6 @@ over the `pool` and `poolAlias` options.
 
 ## Acknowledgements
 
-Thanks to [James Sumners](https://github.com/jsumners) for his work and transferring his repository to me.
+Thanks to 
+- [James Sumners](https://github.com/jsumners) for his work and transferring his repository to me.
+- [Vincit](https://github.com/Vincit/travis-oracledb-xe) for his Travis Oracle work.
