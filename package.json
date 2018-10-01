@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "fastify-plugin": "^1.2.0",
-    "oracledb": "^2.1.2"
+    "oracledb": "^3.0.0"
   }
 }
