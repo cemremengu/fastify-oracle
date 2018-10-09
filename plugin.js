@@ -46,6 +46,10 @@ function decorateFastifyInstance (pool, fastify, options, next) {
 }
 
 function fastifyOracleDB (fastify, options, next) {
+  if (options.oracledb) {
+    Object.assign(oracledb, options.oracledb)
+  }
+
   if (options.client) {
     if (oracledb.Pool.prototype.isPrototypeOf(options.client) === false) {
       return next(Error('supplied client must be an instance of oracledb.pool'))
