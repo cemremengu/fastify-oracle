@@ -19,6 +19,4 @@ before_install:
   - bash ./accept_the_license_agreement_for_oracledb_xe_11g_and_install.sh
 
 notifications:
-  email:
-    on_success: never
-    on_failure: always
+  email: false
