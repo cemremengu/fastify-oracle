@@ -24,12 +24,15 @@ fastify.register(require('fastify-oracle'), {
 })
 
 fastify.get('/db_data', async function (req, reply) {
+  let conn
   try {
-    const conn = await this.oracle.getConnection()
+    conn = await this.oracle.getConnection()
     const result = await conn.execute('select 1 as foo from dual')  
     return result.rows
   } finally {
-    conn.close()
+    if (conn) {
+      conn.close().catch((err) => {})    
+    }
   }  
 })
 
@@ -83,23 +86,29 @@ fastify
   })
 
 fastify.get('/db_1_data', async function (req, reply) {
+  let conn
   try {
-    const conn = await this.oracle.ora1.getConnection()
+    conn = await this.oracle.ora1.getConnection()
     const result = await conn.execute('select 1 as foo from dual')  
     return result.rows
   } finally {
-    conn.close()
-  }  
+    if (conn) {
+      conn.close().catch((err) => {})    
+    }
+  } 
 })
 
 fastify.get('/db_2_data', async function (req, reply) {
+  let conn
   try {
-    const conn = await this.oracle.ora2.getConnection()
+    conn = await this.oracle.ora2.getConnection()
     const result = await conn.execute('select 1 as foo from dual')  
     return result.rows
   } finally {
-    conn.close()
-  }  
+    if (conn) {
+      conn.close().catch((err) => {})    
+    }
+  }
 })
 ```
 
@@ -107,13 +116,16 @@ The `oracledb` instance is also available via `fastify.oracle.db` for accessing 
 
 ```js
 fastify.get('/db_data', async function (req, reply) {
+  let conn
   try {
-    const conn = await this.oracle.ora1.getConnection()
+    conn = await this.oracle.ora1.getConnection()
     const result = await conn.execute('select 1 as foo from dual', { }, { outFormat: this.oracle.db.OBJECT })
     return result.rows
   } finally {
-    conn.close()
-  }    
+    if (conn) {
+      conn.close().catch((err) => {})    
+    }
+  } 
 })
 ```
 
