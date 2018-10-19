@@ -3,19 +3,6 @@
 const fp = require('fastify-plugin')
 const oracledb = require('oracledb')
 
-const close = function (fastify, done) {
-  Object.keys(fastify.oracle)
-    .forEach(key => {
-      if (fastify.oracle[key].pool) {
-        fastify.oracle[key].pool.close(done)
-      }
-    })
-
-  if (fastify.oracle.pool) {
-    fastify.oracle.pool.close(done)
-  }
-}
-
 function decorateFastifyInstance (pool, fastify, options, next) {
   const oracle = {
     getConnection: pool.getConnection.bind(pool),
@@ -28,43 +15,49 @@ function decorateFastifyInstance (pool, fastify, options, next) {
     }
 
     if (fastify.oracle[options.name]) {
-      return next(new Error('Connection name has already been registered: ' + options.name))
+      return next(Error('fastify-oracle: connection name "' + options.name + '" has already been registered'))
     }
 
     fastify.oracle[options.name] = oracle
   } else {
     if (fastify.oracle) {
-      return next(new Error('fastify-oracle has already been registered'))
+      return next(Error('fastify-oracle has already been registered'))
     } else {
       fastify.decorate('oracle', Object.assign(oracle, { db: oracledb }))
     }
   }
 
-  fastify.addHook('onClose', close)
+  fastify.addHook('onClose', (fastify, done) => pool.close(done))
 
   return next()
 }
 
 function fastifyOracleDB (fastify, options, next) {
   if (options.client) {
-    if (oracledb.Pool.prototype.isPrototypeOf(options.client) === false) {
-      return next(Error('supplied client must be an instance of oracledb.pool'))
+    if (oracledb.Pool.prototype.isPrototypeOf(options.client)) {
+      return decorateFastifyInstance(options.client, fastify, options, next)
+    } else {
+      return next(Error('fastify-oracle: supplied client must be an instance of oracledb.pool'))
     }
-    return decorateFastifyInstance(options.client, fastify, options, next)
   }
 
   if (options.poolAlias) {
-    const pool = oracledb.getPool(options.poolAlias)
-    if (!pool) return next(Error('could not get default pool from oracledb instance'))
-    return decorateFastifyInstance(pool, fastify, options, next)
+    try {
+      const pool = oracledb.getPool(options.poolAlias) // synchronous, throws error
+      return decorateFastifyInstance(pool, fastify, options, next)
+    } catch (err) {
+      return next(Error('fastify-oracle: could not get pool alias' + '-' + err.message))
+    }
   }
 
   if (!options.pool) {
-    return next(Error('must supply options.pool oracledb pool options'))
+    return next(Error('fastify-oracle: must supply options.pool oracledb pool options'))
   }
 
   oracledb.createPool(options.pool, (err, pool) => {
-    if (err) return next(err)
+    if (err) {
+      return next(Error('fastify-oracle: failed to create pool' + '-' + err.message))
+    }
     return decorateFastifyInstance(pool, fastify, options, next)
   })
 }
