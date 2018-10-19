@@ -106,6 +106,61 @@ test('duplicate connection names should throw', (t) => {
     .register(plugin, { pool: opts, name: 'testdb' })
 
   fastify.ready(err => {
-    t.is(err.message, 'Connection name has already been registered: testdb')
+    t.is(err.message, 'fastify-oracle: connection name "testdb" has already been registered')
+  })
+})
+
+test('duplicate plugin registration should throw', (t) => {
+  t.plan(1)
+
+  const fastify = Fastify()
+
+  const opts = {
+    user: 'travis',
+    password: 'travis',
+    connectString: 'localhost/xe'
+  }
+
+  fastify
+    .register(plugin, { pool: opts })
+    .register(plugin, { pool: opts })
+
+  fastify.ready(err => {
+    t.is(err.message, 'fastify-oracle has already been registered')
+  })
+})
+
+test('should throw if no pool option is provided', (t) => {
+  t.plan(1)
+
+  const fastify = Fastify()
+
+  fastify.register(plugin, {})
+  fastify.ready(err => {
+    t.is(err.message, 'fastify-oracle: must supply options.pool oracledb pool options')
+  })
+})
+
+test('should throw if could not get pool alias', (t) => {
+  t.plan(1)
+
+  const fastify = Fastify()
+
+  fastify.register(plugin, { poolAlias: 'test' })
+
+  fastify.ready(err => {
+    t.match(err.message, 'fastify-oracle: could not get pool alias')
+  })
+})
+
+test('should throw if pool cannot be created', (t) => {
+  t.plan(1)
+
+  const fastify = Fastify()
+
+  fastify.register(plugin, { pool: { poolMin: -5 } })
+
+  fastify.ready(err => {
+    t.match(err.message, 'fastify-oracle: failed to create pool')
   })
 })

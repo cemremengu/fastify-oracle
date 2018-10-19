@@ -3,6 +3,7 @@
 const test = require('tap').test
 const oracledb = require('oracledb')
 const plugin = require('../plugin')
+const Fastify = require('fastify')
 
 test('accepts singleton client', (t) => {
   t.plan(5)
@@ -58,5 +59,17 @@ test('retrieves a cached pool', (t) => {
       if (err) t.threw(err)
       pool.close()
     })
+  })
+})
+
+test('client must be instance of oracledb.pool', (t) => {
+  t.plan(1)
+
+  const fastify = Fastify()
+
+  fastify.register(plugin, { client: 'hello world' })
+
+  fastify.ready(err => {
+    t.is(err.message, 'fastify-oracle: supplied client must be an instance of oracledb.pool')
   })
 })
