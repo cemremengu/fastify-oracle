@@ -31,7 +31,7 @@ fastify.get('/db_data', async function (req, reply) {
     return result.rows
   } finally {
     if (conn) {
-      conn.close().catch((err) => {})    
+      conn.close().catch((err) => {})
     }
   }  
 })
@@ -40,7 +40,7 @@ fastify.listen(3000, (err) => {
   if (err) {
     fastify.log.error(err)
     // Manually close since Fastify did not boot correctly.
-    fastify.oracle.close()
+    fastify.close()
     process.exit(1)
   }
 
