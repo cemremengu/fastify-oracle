@@ -3,19 +3,6 @@
 const fp = require('fastify-plugin')
 const oracledb = require('oracledb')
 
-const close = function (fastify, done) {
-  Object.keys(fastify.oracle)
-    .forEach(key => {
-      if (fastify.oracle[key].pool) {
-        fastify.oracle[key].pool.close(done)
-      }
-    })
-
-  if (fastify.oracle.pool) {
-    fastify.oracle.pool.close(done)
-  }
-}
-
 function decorateFastifyInstance (pool, fastify, options, next) {
   const oracle = {
     getConnection: pool.getConnection.bind(pool),
@@ -40,7 +27,7 @@ function decorateFastifyInstance (pool, fastify, options, next) {
     }
   }
 
-  fastify.addHook('onClose', close)
+  fastify.addHook('onClose', (fastify, done) => pool.close(done))
 
   return next()
 }
