@@ -40,8 +40,9 @@ fastify.listen(3000, (err) => {
   if (err) {
     fastify.log.error(err)
     // Manually close since Fastify did not boot correctly.
-    fastify.close()
-    process.exit(1)
+    fastify.close(err => {
+      process.exit(1)
+    })
   }
 
   // Initiate Fastify's shutdown procedure so that the plugin will
