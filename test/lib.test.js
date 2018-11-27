@@ -6,10 +6,10 @@ const Fastify = require('fastify')
 const oracledb = require('oracledb')
 
 const poolOptions = {
-  user: 'travis',
-  password: 'travis',
-  connectString: 'localhost/xe',
-  poolMin: 2
+  user: 'RANINFO',
+  password: 'RANINFO',
+  connectString: 'TTGDB12C-RANINFO_INTERNAL_DEV',
+  poolMin: 1
 }
 
 test('creates pool from config', (t) => {
