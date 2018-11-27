@@ -19,11 +19,12 @@ function executionScope (pool, fn, cb) {
       }
 
       conn.commit(function (err) {
+        release(conn)
+
         if (err) {
-          release(conn)
           return cb(err)
         }
-        release(conn)
+
         return cb(null, res)
       })
     }

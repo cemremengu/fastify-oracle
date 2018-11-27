@@ -6,9 +6,9 @@ const Fastify = require('fastify')
 const oracledb = require('oracledb')
 
 const poolOptions = {
-  user: 'travis',
-  password: 'travis',
-  connectString: 'localhost/xe'
+  user: 'RANINFO',
+  password: 'RANINFO',
+  connectString: 'TTGDB12C-RANINFO_INTERNAL_DEV'
 }
 
 test('creates pool from config', (t) => {
@@ -133,6 +133,7 @@ test('execution scope with promise', (t) => {
       t.strictDeepEqual(res.rows, [ { DUMMY: 'X' } ])
 
       fastify.close(err => {
+        console.log(fastify.oracle.pool.status)
         t.error(err)
         t.is(fastify.oracle.pool.status, fastify.oracle.db.POOL_STATUS_CLOSED)
       })
