@@ -63,6 +63,6 @@ function fastifyOracleDB (fastify, options, next) {
 }
 
 module.exports = fp(fastifyOracleDB, {
-  fastify: '^1.1.0',
+  fastify: '>=1.1.0',
   name: 'fastify-oracle'
 })
