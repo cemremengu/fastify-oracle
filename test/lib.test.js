@@ -8,8 +8,7 @@ const oracledb = require('oracledb')
 const poolOptions = {
   user: 'RANINFO',
   password: 'RANINFO',
-  connectString: 'TTGDB12C-RANINFO_INTERNAL_DEV',
-  poolMin: 1
+  connectString: 'TTGDB12C-RANINFO_INTERNAL_DEV'
 }
 
 test('creates pool from config', (t) => {
