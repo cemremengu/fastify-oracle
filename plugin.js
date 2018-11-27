@@ -54,7 +54,7 @@ function fastifyOracleDB (fastify, options, next) {
     return next(Error('fastify-oracle: must supply options.pool oracledb pool options'))
   }
 
-  if (options.jsonOutput) {
+  if (options.objectOutput) {
     oracledb.outFormat = oracledb.OBJECT
   }
 

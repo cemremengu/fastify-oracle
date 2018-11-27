@@ -92,11 +92,11 @@ test('accepts singleton client', (t) => {
   })
 })
 
-test('sets json as default outFormat', (t) => {
+test('sets OBJECT as default outFormat', (t) => {
   t.plan(9)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, jsonOutput: true })
+  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
 
   fastify.ready(err => {
     t.error(err)
