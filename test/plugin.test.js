@@ -133,7 +133,6 @@ test('execution scope with promise', (t) => {
       t.strictDeepEqual(res.rows, [ { DUMMY: 'X' } ])
 
       fastify.close(err => {
-        console.log(fastify.oracle.pool)
         t.error(err)
         t.is(fastify.oracle.pool.status, fastify.oracle.db.POOL_STATUS_CLOSED)
       })
