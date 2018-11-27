@@ -175,9 +175,9 @@ test('execution scope with execute callback', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope((conn, done) => {
+    fastify.oracle.scope((conn, commit) => {
       conn.execute('SELECT * FROM DUAL', function (err, result) {
-        done(err, result)
+        commit(err, result)
       })
     }, function (err, res) {
       t.error(err)
@@ -247,9 +247,9 @@ test('execution scope with execute callback (error)', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope((conn, done) => {
+    fastify.oracle.scope((conn, commit) => {
       conn.execute('SELECT * FROM ??', function (err, result) {
-        done(err, result)
+        commit(err, result)
       })
     }, function (err, res) {
       t.is(res, undefined)

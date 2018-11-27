@@ -7,25 +7,33 @@ function executionScope (pool, fn, cb) {
   pool.getConnection(function (err, conn) {
     if (err) return cb(err)
 
-    const doRelease = (conn) => {
-      conn.close(function () { })
+    const release = (conn) => {
+      conn.close(function (_) {
+      })
     }
 
-    const done = (err, res) => {
-      doRelease(conn)
-
+    const commit = (err, res) => {
       if (err) {
+        release(conn)
         return cb(err)
       }
-      return cb(null, res)
+
+      conn.commit(function (err) {
+        if (err) {
+          release(conn)
+          return cb(err)
+        }
+        release(conn)
+        return cb(null, res)
+      })
     }
 
-    const promise = fn(conn, done)
+    const promise = fn(conn, commit)
 
     if (promise && typeof promise.then === 'function') {
       promise.then(
-        (res) => done(null, res),
-        (e) => done(e))
+        (res) => commit(null, res),
+        (e) => commit(e))
     }
   })
 }
