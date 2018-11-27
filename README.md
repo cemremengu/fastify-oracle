@@ -61,9 +61,8 @@ properties:
 takes precedence over the `pool` option.
 + `client`: an instance of an `oracledb` connection pool. This takes precedence
 over the `pool` and `poolAlias` options.
-
-A `name` option can be used in order to connect to multiple oracledb instances. 
-The first registered instance can be accessed via `fastify.oracle` or `fastify.oracle.<dbname>`. Note that once you register a *named* instance, you will *not* be able to register an unnamed instance.
++ `name`: can be used in order to connect to multiple oracledb instances. The first registered instance can be accessed via `fastify.oracle` or `fastify.oracle.<dbname>`. Note that once you register a *named* instance, you will *not* be able to register an unnamed instance.
++ `jsonOutput`: sets the `outFormat` of oracledb to `OBJECT` (default: `false` i.e: `ARRAY`)
 
 ```js
 const fastify = require('fastify')()

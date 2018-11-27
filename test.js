@@ -92,6 +92,35 @@ test('accepts singleton client', (t) => {
   })
 })
 
+test('sets json as default outFormat', (t) => {
+  t.plan(9)
+
+  const fastify = Fastify()
+  fastify.register(plugin, { pool: poolOptions, jsonOutput: true })
+
+  fastify.ready(err => {
+    t.error(err)
+    t.ok(fastify.oracle.pool)
+
+    fastify.oracle.getConnection((err, conn) => {
+      t.error(err)
+      conn.execute('SELECT 1 AS FOO FROM DUAL', (err, result) => {
+        t.error(err)
+        t.is(result.rows.length, 1)
+        t.is(result.rows[0].FOO, 1)
+        conn.close(err => {
+          t.error(err)
+
+          fastify.close(err => {
+            t.error(err)
+            t.is(fastify.oracle.pool.status, fastify.oracle.db.POOL_STATUS_CLOSED)
+          })
+        })
+      })
+    })
+  })
+})
+
 test('retrieves a cached pool', (t) => {
   t.plan(7)
 

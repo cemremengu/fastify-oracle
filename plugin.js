@@ -27,7 +27,7 @@ function decorateFastifyInstance (pool, fastify, options, next) {
     }
   }
 
-  fastify.addHook('onClose', (fastify, done) => pool.close(done))
+  fastify.addHook('onClose', (_, done) => pool.close(done))
 
   return next()
 }
@@ -52,6 +52,10 @@ function fastifyOracleDB (fastify, options, next) {
 
   if (!options.pool) {
     return next(Error('fastify-oracle: must supply options.pool oracledb pool options'))
+  }
+
+  if (options.jsonOutput) {
+    oracledb.outFormat = oracledb.OBJECT
   }
 
   oracledb.createPool(options.pool, (err, pool) => {
