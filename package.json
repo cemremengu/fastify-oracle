@@ -4,7 +4,7 @@
   "description": "A plugin for Fastify to provide Oracle DB connections",
   "main": "plugin.js",
   "scripts": {
-    "test": "standard && tap --cov test.js",
+    "test": "standard && tap --cov test/*.test.js",
     "lint": "standard | snazzy"
   },
   "precommit": [

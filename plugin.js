@@ -3,10 +3,51 @@
 const fp = require('fastify-plugin')
 const oracledb = require('oracledb')
 
+function transactScope (pool, fn, cb) {
+  pool.getConnection(function (err, conn) {
+    if (err) return cb(err)
+
+    const commit = (err, res) => {
+      if (err) return conn.close(() => cb(err))
+
+      conn.commit(function (err) {
+        conn.close(function () {
+          if (err) {
+            return cb(err)
+          }
+          return cb(null, res)
+        })
+      })
+    }
+
+    const promise = fn(conn, commit)
+
+    if (promise && typeof promise.then === 'function') {
+      promise.then(
+        (res) => commit(null, res),
+        (e) => commit(e))
+    }
+  })
+}
+
+function transact (fn, cb) {
+  if (cb && typeof cb === 'function') {
+    return transactScope(this, fn, cb)
+  }
+
+  return new Promise((resolve, reject) => {
+    transactScope(this, fn, function (err, res) {
+      if (err) { return reject(err) }
+      return resolve(res)
+    })
+  })
+}
+
 function decorateFastifyInstance (pool, fastify, options, next) {
   const oracle = {
     getConnection: pool.getConnection.bind(pool),
-    pool
+    pool,
+    transact: transact.bind(pool)
   }
 
   if (options.name) {
