@@ -8,11 +8,7 @@ function transactScope (pool, fn, cb) {
     if (err) return cb(err)
 
     const commit = (err, res) => {
-      if (err) {
-        return conn.close(function () {
-          return cb(err)
-        })
-      }
+      if (err) return conn.close(() => cb(err))
 
       conn.commit(function (err) {
         conn.close(function () {

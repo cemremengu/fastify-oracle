@@ -307,3 +307,30 @@ test('transact with promise + invalid connection pool', (t) => {
     })
   })
 })
+
+test('transact commit should error if connection drops', (t) => {
+  t.plan(6)
+
+  const fastify = Fastify()
+  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+
+  fastify.ready(err => {
+    t.error(err)
+    t.ok(fastify.oracle.pool)
+
+    fastify.oracle.transact((conn, commit) => {
+      conn.execute('SELECT * FROM DUAL', function (err, result) {
+        conn.close(() => {
+          commit(err, result)
+        })
+      })
+    }, function (err, res) {
+      t.is(res, undefined)
+      t.is(err.message, 'NJS-003: invalid connection')
+      fastify.close(err => {
+        t.error(err)
+        t.is(fastify.oracle.pool.status, fastify.oracle.db.POOL_STATUS_CLOSED)
+      })
+    })
+  })
+})
