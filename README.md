@@ -176,7 +176,6 @@ fastify.oracle.transact((conn, commit) => {
 
 ```
 
-
 ## License
 
 [MIT License](http://jsumners.mit-license.org/)
