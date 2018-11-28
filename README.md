@@ -131,7 +131,7 @@ fastify.get('/db_data', async function (req, reply) {
 
 If needed `pool` instance can be accessed via `fastify.oracle[.dbname].pool`
 
-## Use of scoped executions
+## Use of `transact`
 
 ```js
 const fastify = require('fastify')
@@ -146,15 +146,15 @@ fastify.register(require('fastify-oracle'), {
 
 fastify.post('/user/:username', (req, reply) => {
   // will return a promise, fastify will send the result automatically
-  return fastify.oracle.scope(async conn => {
+  return fastify.oracle.transact(async conn => {
     // will resolve to commit, or reject with an error
     return conn.execute(`INSERT INTO USERS (NAME) VALUES('JIMMY')`)
   })
 })
 
-/* or with a scope callback
+/* or with a transact callback
 
-fastify.oracle.scope(conn => {
+fastify.oracle.transact(conn => {
     return conn.execute('SELECT * FROM DUAL')
   },
   function onResult (err, result) {
@@ -166,7 +166,7 @@ fastify.oracle.scope(conn => {
 
 /* or with a commit callback
 
-fastify.oracle.scope((conn, commit) => {
+fastify.oracle.transact((conn, commit) => {
   conn.execute('SELECT * FROM DUAL', (err, res) => {
     commit(err, res)
   });
