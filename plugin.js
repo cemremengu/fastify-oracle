@@ -3,7 +3,7 @@
 const fp = require('fastify-plugin')
 const oracledb = require('oracledb')
 
-function executionScope (pool, fn, cb) {
+function transactScope (pool, fn, cb) {
   pool.getConnection(function (err, conn) {
     if (err) return cb(err)
 
@@ -34,13 +34,13 @@ function executionScope (pool, fn, cb) {
   })
 }
 
-function scope (fn, cb) {
+function transact (fn, cb) {
   if (cb && typeof cb === 'function') {
-    return executionScope(this, fn, cb)
+    return transactScope(this, fn, cb)
   }
 
   return new Promise((resolve, reject) => {
-    executionScope(this, fn, function (err, res) {
+    transactScope(this, fn, function (err, res) {
       if (err) { return reject(err) }
       return resolve(res)
     })
@@ -51,7 +51,7 @@ function decorateFastifyInstance (pool, fastify, options, next) {
   const oracle = {
     getConnection: pool.getConnection.bind(pool),
     pool,
-    scope: scope.bind(pool)
+    transact: transact.bind(pool)
   }
 
   if (options.name) {

@@ -116,7 +116,7 @@ test('retrieves a cached pool', (t) => {
   })
 })
 
-test('execution scope with promise', (t) => {
+test('transact with promise', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
@@ -126,7 +126,7 @@ test('execution scope with promise', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope(conn => {
+    fastify.oracle.transact(conn => {
       return conn.execute('SELECT * FROM DUAL')
     }).then((res, err) => {
       t.error(err)
@@ -140,7 +140,7 @@ test('execution scope with promise', (t) => {
   })
 })
 
-test('execution scope with callback', (t) => {
+test('transact with callback', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
@@ -150,7 +150,7 @@ test('execution scope with callback', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope(conn => {
+    fastify.oracle.transact(conn => {
       return conn.execute('SELECT * FROM DUAL')
     },
     function (err, result) {
@@ -164,7 +164,7 @@ test('execution scope with callback', (t) => {
   })
 })
 
-test('execution scope with execute callback', (t) => {
+test('transact with commit callback', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
@@ -174,7 +174,7 @@ test('execution scope with execute callback', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope((conn, commit) => {
+    fastify.oracle.transact((conn, commit) => {
       conn.execute('SELECT * FROM DUAL', function (err, result) {
         commit(err, result)
       })
@@ -189,7 +189,7 @@ test('execution scope with execute callback', (t) => {
   })
 })
 
-test('execution scope with promise (error)', (t) => {
+test('transact with promise (error)', (t) => {
   t.plan(5)
 
   const fastify = Fastify()
@@ -199,7 +199,7 @@ test('execution scope with promise (error)', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope(conn => {
+    fastify.oracle.transact(conn => {
       return conn.execute('SELECT * FROM ??')
     }).catch((err) => {
       t.is(err.message, 'ORA-00911: invalid character')
@@ -212,7 +212,7 @@ test('execution scope with promise (error)', (t) => {
   })
 })
 
-test('execution scope with callback (error)', (t) => {
+test('transact with callback (error)', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
@@ -222,7 +222,7 @@ test('execution scope with callback (error)', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope(conn => {
+    fastify.oracle.transact(conn => {
       return conn.execute('SELECT * FROM ??')
     },
     function (err, res) {
@@ -236,7 +236,7 @@ test('execution scope with callback (error)', (t) => {
   })
 })
 
-test('execution scope with execute callback (error)', (t) => {
+test('transact with commit callback (error)', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
@@ -246,7 +246,7 @@ test('execution scope with execute callback (error)', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope((conn, commit) => {
+    fastify.oracle.transact((conn, commit) => {
       conn.execute('SELECT * FROM ??', function (err, result) {
         commit(err, result)
       })
@@ -261,7 +261,7 @@ test('execution scope with execute callback (error)', (t) => {
   })
 })
 
-test('execution scope with callback + invalid connection pool', (t) => {
+test('transact with callback + invalid connection pool', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
@@ -271,7 +271,7 @@ test('execution scope with callback + invalid connection pool', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope(conn => {
+    fastify.oracle.transact(conn => {
       return conn.execute('SELECT * FROM DUAL')
     },
     function (err, res) {
@@ -285,7 +285,7 @@ test('execution scope with callback + invalid connection pool', (t) => {
   })
 })
 
-test('execution scope with promise + invalid connection pool', (t) => {
+test('transact with promise + invalid connection pool', (t) => {
   t.plan(5)
 
   const fastify = Fastify()
@@ -295,7 +295,7 @@ test('execution scope with promise + invalid connection pool', (t) => {
     t.error(err)
     t.ok(fastify.oracle.pool)
 
-    fastify.oracle.scope(conn => {
+    fastify.oracle.transact(conn => {
       return conn.execute('SELECT * FROM DUAL')
     }).catch((err) => {
       t.is(err.message, 'ORA-24415: Missing or null username.')
