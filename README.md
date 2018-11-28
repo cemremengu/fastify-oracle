@@ -10,7 +10,9 @@ instance with an `oracle` property that is a connection pool instance.
 When the Fastify server is shutdown, this plugin invokes the `.close()` method
 on the connection pool.
 
-## Example
+## Examples
+
+The plugin provides the basic functionality for creating a connection and executing statements such as
 
 ```js
 const fastify = require('fastify')()
@@ -49,6 +51,51 @@ fastify.listen(3000, (err) => {
   // automatically close the connection pool.
   process.on('SIGTERM', fastify.close.bind(fastify))
 })
+```
+
+The `transact` feature can be used for convenience to avoid the repetetive task of setting up a connection, committing, releasing etc. as follows:
+
+```js
+const fastify = require('fastify')
+
+fastify.register(require('fastify-oracle'), {
+  pool: {
+    user: 'travis',
+    password: 'travis',
+    connectString: 'localhost/xe'
+  } 
+})
+
+fastify.post('/user/:username', (req, reply) => {
+  // will return a promise, fastify will send the result automatically
+  return fastify.oracle.transact(async conn => {
+    // will resolve to commit, or rollback with an error
+    return conn.execute(`INSERT INTO USERS (NAME) VALUES('JIMMY')`)
+  })
+})
+
+/* or with a transact callback
+
+fastify.oracle.transact(conn => {
+    return conn.execute('SELECT * FROM DUAL')
+  },
+  function onResult (err, result) {
+    reply.send(err || result)
+  }
+})
+
+*/
+
+/* or with a commit callback
+
+fastify.oracle.transact((conn, commit) => {
+  conn.execute('SELECT * FROM DUAL', (err, res) => {
+    commit(err, res)
+  });
+})
+
+*/
+
 ```
 
 ## Options
@@ -130,51 +177,6 @@ fastify.get('/db_data', async function (req, reply) {
 ```
 
 If needed `pool` instance can be accessed via `fastify.oracle[.dbname].pool`
-
-## Use of `transact`
-
-```js
-const fastify = require('fastify')
-
-fastify.register(require('fastify-oracle'), {
-  pool: {
-    user: 'travis',
-    password: 'travis',
-    connectString: 'localhost/xe'
-  } 
-})
-
-fastify.post('/user/:username', (req, reply) => {
-  // will return a promise, fastify will send the result automatically
-  return fastify.oracle.transact(async conn => {
-    // will resolve to commit, or reject with an error
-    return conn.execute(`INSERT INTO USERS (NAME) VALUES('JIMMY')`)
-  })
-})
-
-/* or with a transact callback
-
-fastify.oracle.transact(conn => {
-    return conn.execute('SELECT * FROM DUAL')
-  },
-  function onResult (err, result) {
-    reply.send(err || result)
-  }
-})
-
-*/
-
-/* or with a commit callback
-
-fastify.oracle.transact((conn, commit) => {
-  conn.execute('SELECT * FROM DUAL', (err, res) => {
-    commit(err, res)
-  });
-})
-
-*/
-
-```
 
 ## License
 
