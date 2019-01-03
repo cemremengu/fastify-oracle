@@ -95,8 +95,12 @@ function fastifyOracleDB (fastify, options, next) {
     return next(Error('fastify-oracle: must supply options.pool oracledb pool options'))
   }
 
-  if (options.objectOutput) {
-    oracledb.outFormat = oracledb.OBJECT
+  if (options.outFormat) {
+    oracledb.outFormat = oracledb[options.outFormat.toUpperCase()]
+  }
+
+  if (options.fetchAsString) {
+    oracledb.fetchAsString = options.fetchAsString.map(t => oracledb[t.toUpperCase()])
   }
 
   oracledb.createPool(options.pool, (err, pool) => {

@@ -103,13 +103,16 @@ fastify.oracle.transact((conn, commit) => {
 `fastify-oracle` requires an options object with at least one of the following
 properties:
 
-+ `pool`: an `oracledb` [pool configuration object](https://github.com/oracle/node-oracledb/blob/33331413/doc/api.md#createpool)
-+ `poolAlias`: the name of a pool alias that has already been configured. This
+- `pool`: an `oracledb` [pool configuration object](https://github.com/oracle/node-oracledb/blob/33331413/doc/api.md#createpool)
+- `poolAlias`: the name of a pool alias that has already been configured. This
 takes precedence over the `pool` option.
-+ `client`: an instance of an `oracledb` connection pool. This takes precedence
+- `client`: an instance of an `oracledb` connection pool. This takes precedence
 over the `pool` and `poolAlias` options.
-+ `name`: can be used in order to connect to multiple oracledb instances. The first registered instance can be accessed via `fastify.oracle` or `fastify.oracle.<dbname>`. Note that once you register a *named* instance, you will *not* be able to register an unnamed instance.
-+ `objectOutput`: sets the `outFormat` of oracledb to `OBJECT` (default: `false` i.e: `ARRAY`)
+- `name`: (optional) can be used in order to connect to multiple oracledb instances. The first registered instance can be accessed via `fastify.oracle` or `fastify.oracle.<dbname>`. Note that once you register a *named* instance, you will *not* be able to register an unnamed instance.
+- `outFormat`: (optional) sets the `outFormat` of oracledb. Should be `'ARRAY'` or `'OBJECT'`. Default: `'ARRAY'`
+- `fetchAsString`: (optional) the column data of specified types are returned as a string instead of the default representation. Should be an array of valid data types. 
+Valid values are `['DATE', 'NUMBER', 'BUFFER', 'CLOB']`. Default `[]`.
+
 
 ```js
 const fastify = require('fastify')()
@@ -140,7 +143,7 @@ fastify.get('/db_1_data', async function (req, reply) {
     return result.rows
   } finally {
     if (conn) {
-      conn.close().catch((err) => {})    
+      conn.close().catch((err) => {})
     }
   } 
 })
@@ -153,7 +156,7 @@ fastify.get('/db_2_data', async function (req, reply) {
     return result.rows
   } finally {
     if (conn) {
-      conn.close().catch((err) => {})    
+      conn.close().catch((err) => {})
     }
   }
 })
@@ -170,7 +173,7 @@ fastify.get('/db_data', async function (req, reply) {
     return result.rows
   } finally {
     if (conn) {
-      conn.close().catch((err) => {})    
+      conn.close().catch((err) => {})
     }
   } 
 })

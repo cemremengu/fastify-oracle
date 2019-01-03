@@ -92,12 +92,25 @@ test('sets OBJECT as default outFormat', (t) => {
   oracledb.outFormat = oracledb.ARRAY
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: {}, objectOutput: true })
+  fastify.register(plugin, { pool: {}, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
     t.ok(fastify.oracle.pool)
     t.is(fastify.oracle.db.outFormat, fastify.oracle.db.OBJECT)
     oracledb.outFormat = oracledb.ARRAY
+  })
+})
+
+test('sets fetchAsString values', (t) => {
+  t.plan(3)
+
+  const fastify = Fastify()
+  fastify.register(plugin, { pool: {}, fetchAsString: ['NUMBER'] })
+
+  fastify.ready(err => {
+    t.error(err)
+    t.ok(fastify.oracle.pool)
+    t.deepEquals(fastify.oracle.db.fetchAsString, [fastify.oracle.db.NUMBER])
   })
 })
