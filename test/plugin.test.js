@@ -120,7 +120,7 @@ test('transact with promise', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+  fastify.register(plugin, { pool: poolOptions, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
@@ -144,7 +144,7 @@ test('transact with callback', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+  fastify.register(plugin, { pool: poolOptions, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
@@ -168,7 +168,7 @@ test('transact with commit callback', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+  fastify.register(plugin, { pool: poolOptions, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
@@ -193,7 +193,7 @@ test('transact with promise (error)', (t) => {
   t.plan(5)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+  fastify.register(plugin, { pool: poolOptions, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
@@ -216,7 +216,7 @@ test('transact with callback (error)', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+  fastify.register(plugin, { pool: poolOptions, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
@@ -240,7 +240,7 @@ test('transact with commit callback (error)', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+  fastify.register(plugin, { pool: poolOptions, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
@@ -265,7 +265,7 @@ test('transact with callback + invalid connection pool', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: {}, objectOutput: true })
+  fastify.register(plugin, { pool: {}, outFormat: 'object' })
 
   fastify.ready(err => {
     t.error(err)
@@ -289,7 +289,7 @@ test('transact with promise + invalid connection pool', (t) => {
   t.plan(5)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: {}, objectOutput: true })
+  fastify.register(plugin, { pool: {}, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
@@ -312,7 +312,7 @@ test('transact commit should error if connection drops', (t) => {
   t.plan(6)
 
   const fastify = Fastify()
-  fastify.register(plugin, { pool: poolOptions, objectOutput: true })
+  fastify.register(plugin, { pool: poolOptions, outFormat: 'OBJECT' })
 
   fastify.ready(err => {
     t.error(err)
