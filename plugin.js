@@ -103,6 +103,8 @@ function fastifyOracleDB (fastify, options, next) {
     oracledb.fetchAsString = options.fetchAsString.map(t => oracledb[t.toUpperCase()])
   }
 
+  oracledb.extendedMetaData = options.extendedMetaData || false
+
   oracledb.createPool(options.pool, (err, pool) => {
     if (err) {
       return next(Error('fastify-oracle: failed to create pool' + '-' + err.message))
