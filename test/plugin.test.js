@@ -24,6 +24,10 @@ test('creates pool from config', async (t) => {
     t.is(result.rows.length, 1)
     t.is(result.rows[0].FOO, 1)
 
+    // Note that we don't explicity close the connection here.
+    // This tests the drainTime option since if a drainTime is not given,
+    // then any open connections should be released with connection.close() before fastify.close() is called, 
+    // otherwise the underlying pool close will fail and the pool will remain open.
     await fastify.close()
     t.is(fastify.oracle.pool.status, fastify.oracle.db.POOL_STATUS_CLOSED)
   } catch (err) {
