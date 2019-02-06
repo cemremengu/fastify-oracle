@@ -3,10 +3,8 @@ sudo: required
 dist: xenial
 
 node_js:
-  - "11"
   - "10"
   - "8"
-  - "6"
   
 script:
   - npm run test

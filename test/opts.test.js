@@ -5,112 +5,111 @@ const plugin = require('../plugin')
 const Fastify = require('fastify')
 const oracledb = require('oracledb')
 
-test('client must be instance of oracledb.pool', (t) => {
-  t.plan(1)
-
+test('client must be instance of oracledb.pool', async (t) => {
   const fastify = Fastify()
-
   fastify.register(plugin, { client: 'hello world' })
 
-  fastify.ready(err => {
+  try {
+    await fastify.ready()
+  } catch (err) {
     t.is(err.message, 'fastify-oracle: supplied client must be an instance of oracledb.pool')
-    fastify.close()
-  })
+    await fastify.close()
+  }
 })
 
-test('duplicate connection names should throw', (t) => {
-  t.plan(1)
-
+test('duplicate connection names should throw', async (t) => {
   const fastify = Fastify()
-
   fastify
     .register(plugin, { pool: {}, name: 'testdb' })
     .register(plugin, { pool: {}, name: 'testdb' })
 
-  fastify.ready(err => {
+  try {
+    await fastify.ready()
+  } catch (err) {
     t.is(err.message, 'fastify-oracle: connection name "testdb" has already been registered')
-    fastify.close()
-  })
+    await fastify.close()
+  }
 })
 
-test('duplicate plugin registration should throw', (t) => {
-  t.plan(1)
-
+test('duplicate plugin registration should throw', async (t) => {
   const fastify = Fastify()
 
   fastify
     .register(plugin, { pool: {} })
     .register(plugin, { pool: {} })
 
-  fastify.ready(err => {
+  try {
+    await fastify.ready()
+  } catch (err) {
     t.is(err.message, 'fastify-oracle has already been registered')
-    fastify.close()
-  })
+    await fastify.close()
+  }
 })
 
-test('should throw if no pool option is provided', (t) => {
-  t.plan(1)
-
+test('should throw if no pool option is provided', async (t) => {
   const fastify = Fastify()
 
   fastify.register(plugin, {})
-  fastify.ready(err => {
+
+  try {
+    await fastify.ready()
+  } catch (err) {
     t.is(err.message, 'fastify-oracle: must supply options.pool oracledb pool options')
-    fastify.close()
-  })
+    await fastify.close()
+  }
 })
 
-test('should throw if could not get pool alias', (t) => {
-  t.plan(1)
-
+test('should throw if could not get pool alias', async (t) => {
   const fastify = Fastify()
 
   fastify.register(plugin, { poolAlias: 'test' })
 
-  fastify.ready(err => {
+  try {
+    await fastify.ready()
+  } catch (err) {
     t.match(err.message, 'fastify-oracle: could not get pool alias')
-    fastify.close()
-  })
+    await fastify.close()
+  }
 })
 
-test('should throw if pool cannot be created', (t) => {
-  t.plan(1)
-
+test('should throw if pool cannot be created', async (t) => {
   const fastify = Fastify()
 
   fastify.register(plugin, { pool: { poolMin: -5 } })
 
-  fastify.ready(err => {
+  try {
+    await fastify.ready()
+  } catch (err) {
     t.match(err.message, 'fastify-oracle: failed to create pool')
-    fastify.close()
-  })
+    await fastify.close()
+  }
 })
 
-test('sets OBJECT as default outFormat', (t) => {
-  t.plan(3)
-
+test('sets OBJECT as default outFormat', async (t) => {
+  const fastify = Fastify()
   oracledb.outFormat = oracledb.ARRAY
 
-  const fastify = Fastify()
   fastify.register(plugin, { pool: {}, outFormat: 'OBJECT' })
 
-  fastify.ready(err => {
-    t.error(err)
+  try {
+    await fastify.ready()
     t.ok(fastify.oracle.pool)
     t.is(fastify.oracle.db.outFormat, fastify.oracle.db.OBJECT)
     oracledb.outFormat = oracledb.ARRAY
-  })
+  } catch (err) {
+    t.error(err)
+  }
 })
 
-test('sets fetchAsString values', (t) => {
-  t.plan(3)
-
+test('sets fetchAsString values', async (t) => {
   const fastify = Fastify()
   fastify.register(plugin, { pool: {}, fetchAsString: ['NUMBER'] })
 
-  fastify.ready(err => {
-    t.error(err)
+  try {
+    await fastify.ready()
     t.ok(fastify.oracle.pool)
     t.deepEquals(fastify.oracle.db.fetchAsString, [fastify.oracle.db.NUMBER])
-  })
+  } catch (err) {
+    t.error(err)
+  }
 })

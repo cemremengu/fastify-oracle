@@ -10,6 +10,21 @@ instance with an `oracle` property that is a connection pool instance.
 When the Fastify server is shutdown, this plugin invokes the `.close()` method
 on the connection pool.
 
+## Install
+```
+npm i fastify-oracle --save
+```
+
+## Usage
+Add it to you project with `register` and you are done!
+This plugin will add the `oracle` namespace in your Fastify instance, with the following properties:
+```
+getConnection: the function to get a connection from the pool
+pool: the pool instance
+query: a utility to perform a query _without_ a transaction
+transact: a utility to perform multiple queries _with_ a transaction
+```
+
 ## Examples
 
 The plugin provides the basic functionality for creating a connection and executing statements such as
@@ -53,7 +68,35 @@ fastify.listen(3000, (err) => {
 })
 ```
 
-The `transact` feature can be used for convenience to avoid the repetetive task of setting up a connection, committing, releasing etc. as follows:
+The `query` feature can be used for convenience to perform a query _without_ a transaction
+
+```js
+const fastify = require('fastify')
+
+fastify.register(require('fastify-oracle'), {
+  pool: {
+    user: 'travis',
+    password: 'travis',
+    connectString: 'localhost/xe'
+  } 
+})
+
+fastify.post('/user/:username', (req, reply) => {
+  // will return a promise, fastify will send the result automatically
+  return fastify.oracle.query('SELECT * FROM USERS')
+})
+
+/* or with a callback
+
+fastify.oracle.query('SELECT * FROM USERS', function onResult (err, result) {
+  reply.send(err || result)
+})
+
+*/
+```
+See [node-oracledb](https://oracle.github.io/node-oracledb/doc/api.html#-426-connectionexecute) documentation for all available usage options.
+
+The `transact` feature can be used for convenience to perform multiple queries _with_ a transaction
 
 ```js
 const fastify = require('fastify')
@@ -74,7 +117,7 @@ fastify.post('/user/:username', (req, reply) => {
   })
 })
 
-/* or with a transact callback
+/* or with a callback
 
 fastify.oracle.transact(conn => {
     return conn.execute('SELECT * FROM DUAL')
@@ -108,6 +151,9 @@ properties:
 takes precedence over the `pool` option.
 - `client`: an instance of an `oracledb` connection pool. This takes precedence
 over the `pool` and `poolAlias` options.
+
+Other options are as follows
+
 - `name`: (optional) can be used in order to connect to multiple oracledb instances. The first registered instance can be accessed via `fastify.oracle` or `fastify.oracle.<dbname>`. Note that once you register a *named* instance, you will *not* be able to register an unnamed instance.
 - `outFormat`: (optional) sets the `outFormat` of oracledb. Should be `'ARRAY'` or `'OBJECT'`. Default: `'ARRAY'`
 - `fetchAsString`: (optional) the column data of specified types are returned as a string instead of the default representation. Should be an array of valid data types. 
