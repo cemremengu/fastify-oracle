@@ -43,10 +43,61 @@ function transact (fn, cb) {
   })
 }
 
+function execute (pool, sql, values, options, cb) {
+  pool.getConnection(function (err, conn) {
+    if (err) return cb(err)
+
+    const done = (err, res) => {
+      if (err) return conn.close(() => cb(err))
+
+      conn.close(function () {
+        return cb(null, res)
+      })
+    }
+
+    conn.execute(sql, values, options, done)
+  })
+}
+
+function query (sql, a2, a3, a4) {
+  const promisify = typeof arguments[arguments.length - 1] !== 'function'
+
+  let cb
+  let values = []
+  let options = {}
+
+  switch (arguments.length) {
+    case 2:
+      promisify ? values = a2 : cb = a2
+      break
+    case 3:
+      values = a2
+      promisify ? options = a3 : cb = a3
+      break
+    case 4:
+      values = a2
+      options = a3
+      cb = a4
+      break
+  }
+
+  if (cb && typeof cb === 'function') {
+    return execute(this, sql, values, options, cb)
+  }
+
+  return new Promise((resolve, reject) => {
+    execute(this, sql, values, options, function (err, res) {
+      if (err) { return reject(err) }
+      return resolve(res)
+    })
+  })
+}
+
 function decorateFastifyInstance (pool, fastify, options, next) {
   const oracle = {
     getConnection: pool.getConnection.bind(pool),
     pool,
+    query: query.bind(pool),
     transact: transact.bind(pool)
   }
 
@@ -56,7 +107,7 @@ function decorateFastifyInstance (pool, fastify, options, next) {
     }
 
     if (fastify.oracle[options.name]) {
-      return next(Error('fastify-oracle: connection name "' + options.name + '" has already been registered'))
+      return next(Error(`fastify-oracle: connection name "${options.name}" has already been registered`))
     }
 
     fastify.oracle[options.name] = oracle
@@ -68,7 +119,11 @@ function decorateFastifyInstance (pool, fastify, options, next) {
     }
   }
 
-  fastify.addHook('onClose', (_, done) => pool.close(done))
+  if (options.drainTime != null) {
+    fastify.addHook('onClose', (_, done) => pool.close(options.drainTime, done))
+  } else {
+    fastify.addHook('onClose', (_, done) => pool.close(done))
+  }
 
   return next()
 }
