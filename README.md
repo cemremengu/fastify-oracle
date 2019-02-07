@@ -41,16 +41,14 @@ fastify.register(require('fastify-oracle'), {
 })
 
 fastify.get('/db_data', async function (req, reply) {
-  let conn
+  let connection
   try {
-    conn = await this.oracle.getConnection()
-    const result = await conn.execute('select 1 as foo from dual')  
-    return result.rows
+    connection = await this.oracle.getConnection()
+    const { rows } = await connection.execute('SELECT 1 AS FOO FROM DUAL')
+    return rows
   } finally {
-    if (conn) {
-      conn.close().catch((err) => {})
-    }
-  }  
+    if (connection) await connection.close()
+  }
 })
 
 fastify.listen(3000, (err) => {
@@ -83,7 +81,7 @@ fastify.register(require('fastify-oracle'), {
 
 fastify.post('/user/:username', (req, reply) => {
   // will return a promise, fastify will send the result automatically
-  return fastify.oracle.query('SELECT * FROM USERS')
+  return fastify.oracle.query('SELECT * FROM USERS WHERE NAME = :name', { name: 'james' })
 })
 
 /* or with a callback
